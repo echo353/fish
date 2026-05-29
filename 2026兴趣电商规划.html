@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 兴趣电商规划</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Serif+SC:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8341C;
+    --blue: #1A6CFF;
+    --gold: #F5A623;
+    --teal: #00C9B1;
+    --bg: #080A0F;
+    --surface: #0E1117;
+    --surface-2: #161B26;
+    --border: rgba(255,255,255,0.08);
+    --text: #EDE9E3;
+    --muted: #5A6278;
+    --serif: 'Noto Serif SC', serif;
+    --mono: 'Space Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26,108,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,108,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,52,28,0.12) 0%, transparent 70%);
+    top: -200px;
+    right: -200px;
+    animation: glowFloat 10s ease-in-out infinite;
+  }
+
+  .hero-glow-2 {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,108,255,0.1) 0%, transparent 70%);
+    bottom: -150px;
+    left: -100px;
+    animation: glowFloat 12s ease-in-out infinite reverse;
+  }
+
+  @keyframes glowFloat {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -30px); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 80px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(80px, 12vw, 180px);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    animation: fadeUp 0.8s ease 0.15s forwards;
+    opacity: 0;
+  }
+
+  .hero-title .accent { color: var(--red); }
+  .hero-title .line2 {
+    display: block;
+    color: rgba(237,233,227,0.15);
+    -webkit-text-stroke: 1px rgba(237,233,227,0.25);
+  }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--muted);
+    margin-top: 32px;
+    max-width: 560px;
+    line-height: 1.9;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+    opacity: 0;
+  }
+
+  .hero-sub strong { color: var(--text); }
+
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    margin-top: 60px;
+    animation: fadeUp 0.8s ease 0.45s forwards;
+    opacity: 0;
+  }
+
+  .meta-item {
+    border-left: 2px solid var(--border);
+    padding-left: 20px;
+  }
+
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .meta-value {
+    font-family: var(--display);
+    font-size: 28px;
+    color: var(--text);
+    line-height: 1.2;
+    margin-top: 4px;
+  }
+
+  .hero-scroll {
+    position: relative;
+    z-index: 2;
+    padding: 30px 80px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid var(--border);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+    opacity: 0;
+  }
+
+  .scroll-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--red), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0% { transform: scaleX(0); transform-origin: left; }
+    50% { transform: scaleX(1); transform-origin: left; }
+    51% { transform: scaleX(1); transform-origin: right; }
+    100% { transform: scaleX(0); transform-origin: right; }
+  }
+
+  .scroll-text {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── LAYOUT ─── */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 80px;
+  }
+
+  /* ─── SECTION HEADER ─── */
+  .section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 80px;
+  }
+
+  .section-num {
+    font-family: var(--display);
+    font-size: 160px;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: -40px;
+    user-select: none;
+    letter-spacing: -0.02em;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .section-desc {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.9;
+  }
+
+  /* ─── OVERVIEW / STRUCTURE ─── */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .overview-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .overview-card:hover { background: var(--surface-2); }
+
+  .overview-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .overview-card:hover::before { transform: scaleX(1); }
+
+  .ov-part {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .ov-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .ov-items {
+    list-style: none;
+  }
+
+  .ov-items li {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  .ov-items li:last-child { border-bottom: none; }
+
+  /* ─── CONCEPT COMPARISON ─── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    margin-top: 50px;
+    border: 1px solid var(--border);
+  }
+
+  .compare-col {
+    padding: 40px 36px;
+  }
+
+  .compare-col.left { background: var(--surface); }
+  .compare-col.right { background: var(--surface-2); }
+
+  .compare-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    writing-mode: vertical-rl;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .compare-divider::before, .compare-divider::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: calc(50% - 30px);
+    background: var(--border);
+    transform: translateX(-50%);
+  }
+
+  .compare-divider::before { top: 0; }
+  .compare-divider::after { bottom: 0; }
+
+  .compare-head {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .compare-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-col.right .compare-title { color: var(--red); }
+
+  .compare-row {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .compare-row:last-child { border-bottom: none; }
+
+  .cr-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 60px;
+    margin-top: 2px;
+  }
+
+  .cr-val { color: var(--text); }
+
+  /* ─── TREND GRID ─── */
+  .trend-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .trend-card {
+    background: var(--surface);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .trend-card:hover {
+    background: var(--surface-2);
+    transform: translateY(-4px);
+  }
+
+  .trend-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .trend-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .trend-data {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .trend-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .trend-impact {
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: rgba(232,52,28,0.08);
+    border-left: 2px solid var(--red);
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ─── SWOT ─── */
+  .swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .swot-cell {
+    padding: 40px 36px;
+    position: relative;
+  }
+
+  .swot-cell.s { background: rgba(26,108,255,0.06); }
+  .swot-cell.w { background: rgba(232,52,28,0.06); }
+  .swot-cell.o { background: rgba(0,201,177,0.06); }
+  .swot-cell.t { background: rgba(245,166,35,0.06); }
+
+  .swot-label {
+    font-family: var(--display);
+    font-size: 80px;
+    position: absolute;
+    top: 16px;
+    right: 28px;
+    opacity: 0.07;
+    line-height: 1;
+  }
+
+  .swot-head {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .swot-cell.s .swot-head { color: #1A6CFF; }
+  .swot-cell.w .swot-head { color: var(--red); }
+  .swot-cell.o .swot-head { color: var(--teal); }
+  .swot-cell.t .swot-head { color: var(--gold); }
+
+  .swot-items {
+    list-style: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .swot-items li {
+    font-size: 14px;
+    color: var(--text);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .swot-items li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .swot-items li:last-child { border-bottom: none; }
+
+  /* ─── STRATEGY POSITIONS ─── */
+  .strategy-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .strategy-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    position: relative;
+    cursor: default;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+  }
+
+  .strategy-card:hover { border-bottom-color: var(--red); }
+  .strategy-card.recommended { border-bottom-color: var(--red); background: var(--surface-2); }
+
+  .rec-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    background: var(--red);
+    color: white;
+    padding: 3px 8px;
+    text-transform: uppercase;
+  }
+
+  .strategy-opt {
+    font-family: var(--display);
+    font-size: 48px;
+    color: rgba(255,255,255,0.08);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .strategy-card.recommended .strategy-opt { color: rgba(232,52,28,0.2); }
+
+  .strategy-name {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .strategy-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .strategy-fit {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* ─── SKU QUADRANT ─── */
+  .quadrant-wrap {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .quadrant-chart {
+    aspect-ratio: 1;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+
+  .q-axis-x {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+    top: 50%;
+  }
+
+  .q-axis-y {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .q-cell {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+
+  .q-cell.tl { top: 0; left: 0; background: rgba(26,108,255,0.05); }
+  .q-cell.tr { top: 0; right: 0; background: rgba(232,52,28,0.1); border: 2px solid rgba(232,52,28,0.3); }
+  .q-cell.bl { bottom: 0; left: 0; background: rgba(245,166,35,0.05); }
+  .q-cell.br { bottom: 0; right: 0; background: rgba(0,201,177,0.05); }
+
+  .q-cell-name {
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .q-cell.tr .q-cell-name { color: var(--red); }
+
+  .q-cell-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .q-star { font-size: 18px; margin-top: 4px; }
+
+  .q-label-top {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .q-label-right {
+    position: absolute;
+    right: -90px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .quadrant-sku-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sku-item {
+    background: var(--surface);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s;
+  }
+
+  .sku-item:hover { background: var(--surface-2); }
+
+  .sku-stars {
+    font-size: 14px;
+    min-width: 80px;
+  }
+
+  .sku-info { flex: 1; }
+
+  .sku-name {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .sku-desc {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .sku-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .sku-badge.priority { background: rgba(232,52,28,0.15); color: var(--red); }
+  .sku-badge.normal { background: rgba(26,108,255,0.1); color: #5599FF; }
+  .sku-badge.caution { background: rgba(245,166,35,0.1); color: var(--gold); }
+  .sku-badge.avoid { background: rgba(90,98,120,0.2); color: var(--muted); }
+
+  /* ─── CONTENT 3 TRACKS ─── */
+  .tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .track-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .track-num {
+    font-family: var(--display);
+    font-size: 100px;
+    color: rgba(255,255,255,0.03);
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .track-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .track-icon.red { background: rgba(232,52,28,0.15); }
+  .track-icon.blue { background: rgba(26,108,255,0.15); }
+  .track-icon.teal { background: rgba(0,201,177,0.15); }
+
+  .track-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .track-card:nth-child(1) .track-type { color: var(--red); }
+  .track-card:nth-child(2) .track-type { color: #5599FF; }
+  .track-card:nth-child(3) .track-type { color: var(--teal); }
+
+  .track-name {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .track-goal {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+
+  .track-method {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+    padding: 10px 14px;
+    border-left: 2px solid;
+    line-height: 1.5;
+  }
+
+  .track-card:nth-child(1) .track-method { border-color: var(--red); }
+  .track-card:nth-child(2) .track-method { border-color: #1A6CFF; }
+  .track-card:nth-child(3) .track-method { border-color: var(--teal); }
+
+  /* ─── PLATFORM STRATEGY ─── */
+  .platform-list {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .platform-row {
+    background: var(--surface);
+    display: grid;
+    grid-template-columns: 60px 160px 1fr 1fr 100px;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 32px;
+    transition: background 0.3s;
+  }
+
+  .platform-row:hover { background: var(--surface-2); }
+
+  .platform-row.header {
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 32px 20px;
+  }
+
+  .platform-row.header span {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .pl-icon {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .pl-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .pl-position {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .pl-tactic {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .pl-stars {
+    font-size: 12px;
+    text-align: right;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  /* ─── LIVESTREAM ─── */
+  .live-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .live-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    position: relative;
+  }
+
+  .live-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .live-name {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .live-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .live-row {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .live-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 40px;
+    margin-top: 1px;
+  }
+
+  .live-val { color: var(--text); line-height: 1.5; }
+
+  .live-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+  }
+
+  .live-card:nth-child(1) .live-bar { background: var(--gold); width: 100%; }
+  .live-card:nth-child(2) .live-bar { background: var(--red); width: 70%; }
+  .live-card:nth-child(3) .live-bar { background: var(--teal); width: 40%; }
+
+  /* ─── COMPLIANCE ─── */
+  .compliance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .comp-col {
+    padding: 36px 32px;
+  }
+
+  .comp-col.yes { background: rgba(0,201,177,0.05); }
+  .comp-col.no { background: rgba(232,52,28,0.05); }
+
+  .comp-head {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+
+  .comp-col.yes .comp-head { background: rgba(0,201,177,0.15); color: var(--teal); }
+  .comp-col.no .comp-head { background: rgba(232,52,28,0.15); color: var(--red); }
+
+  .comp-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .comp-items li {
+    font-size: 14px;
+    color: var(--text);
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    line-height: 1.6;
+    border-left: 2px solid;
+  }
+
+  .comp-col.yes .comp-items li { border-color: var(--teal); }
+  .comp-col.no .comp-items li { border-color: var(--red); }
+
+  .audit-flow {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .audit-step {
+    flex: 1;
+    background: var(--surface);
+    padding: 24px 20px;
+    text-align: center;
+    position: relative;
+  }
+
+  .audit-step::after {
+    content: '▶';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--red);
+    font-size: 14px;
+    z-index: 1;
+  }
+
+  .audit-step:last-child::after { display: none; }
+
+  .audit-num {
+    font-family: var(--display);
+    font-size: 36px;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .audit-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .audit-desc {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ─── MILESTONE / TIMELINE ─── */
+  .milestone-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .ms-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ms-phase {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .ms-title {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .ms-card:nth-child(1) .ms-title { color: #5599FF; }
+  .ms-card:nth-child(2) .ms-title { color: var(--gold); }
+  .ms-card:nth-child(3) .ms-title { color: var(--teal); }
+
+  .ms-focus {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.7;
+  }
+
+  .ms-kpi-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .ms-kpi {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .ms-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+  }
+
+  .ms-card:nth-child(1) .ms-progress { background: #1A6CFF; width: 33%; }
+  .ms-card:nth-child(2) .ms-progress { background: var(--gold); width: 66%; }
+  .ms-card:nth-child(3) .ms-progress { background: var(--teal); width: 100%; }
+
+  /* ─── BENCHMARK CASES ─── */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 50px;
+  }
+
+  .case-card {
+    background: var(--surface);
+    padding: 32px 28px;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .case-card:hover { background: var(--surface-2); }
+
+  .case-brand {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .case-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .case-tactic {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .case-learn-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .case-learn {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    padding: 10px 14px;
+    background: rgba(0,201,177,0.05);
+    border-left: 2px solid var(--teal);
+  }
+
+  .case-card.wide {
+    grid-column: span 2;
+  }
+
+  /* ─── KEY DECISIONS ─── */
+  .decisions-list {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .decision-item {
+    background: var(--surface);
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 32px;
+    transition: all 0.3s;
+  }
+
+  .decision-item:hover {
+    background: var(--surface-2);
+    padding-left: 40px;
+  }
+
+  .decision-num {
+    font-family: var(--display);
+    font-size: 40px;
+    color: var(--red);
+    opacity: 0.4;
+    line-height: 1;
+  }
+
+  .decision-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .decision-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    background: rgba(232,52,28,0.1);
+    color: var(--red);
+    padding: 4px 10px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ─── INSIGHT BOX ─── */
+  .insight {
+    margin: 40px 0;
+    padding: 28px 32px;
+    border-left: 3px solid var(--red);
+    background: rgba(232,52,28,0.05);
+  }
+
+  .insight p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text);
+  }
+
+  .insight strong { color: var(--red); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 0;
+    margin-top: 60px;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-brand {
+    font-family: var(--display);
+    font-size: 80px;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.06);
+  }
+
+  .footer-meta {
+    text-align: right;
+  }
+
+  .footer-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .footer-status {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── STICKY NAV ─── */
+  .sticky-nav {
+    position: fixed;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .nav-dot.active { background: var(--red); transform: scale(1.5); }
+
+  .nav-dot:hover::after {
+    content: attr(data-label);
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    background: var(--surface-2);
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+  }
+
+  /* ─── FACT STRIP ─── */
+  .fact-strip {
+    background: var(--red);
+    padding: 20px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .fact-ticker {
+    display: flex;
+    gap: 80px;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+    width: max-content;
+  }
+
+  .fact-ticker span {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .fact-ticker .sep {
+    color: rgba(255,255,255,0.4);
+    margin: 0 -40px;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ─── NORTH STAR ─── */
+  .northstar {
+    background: var(--surface);
+    padding: 50px;
+    margin-top: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .northstar::before {
+    content: '★';
+    position: absolute;
+    right: 40px;
+    top: 20px;
+    font-size: 200px;
+    color: rgba(232,52,28,0.04);
+    line-height: 1;
+  }
+
+  .ns-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .ns-statement {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 700;
+    max-width: 700px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+
+  .ns-metrics {
+    display: flex;
+    gap: 2px;
+  }
+
+  .ns-metric {
+    background: rgba(255,255,255,0.03);
+    padding: 24px 28px;
+    flex: 1;
+  }
+
+  .ns-metric-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .ns-metric-val {
+    font-family: var(--display);
+    font-size: 36px;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .ns-metric-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .container { padding: 0 40px; }
+    .hero-content { padding: 60px 40px 40px; }
+    .hero-scroll { padding: 24px 40px; }
+    .overview-grid { grid-template-columns: 1fr 1fr; }
+    .trend-grid { grid-template-columns: 1fr 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .compare-divider { display: none; }
+    .strategy-cards { grid-template-columns: 1fr; }
+    .quadrant-wrap { grid-template-columns: 1fr; }
+    .platform-row { grid-template-columns: 40px 120px 1fr 80px; }
+    .pl-tactic { display: none; }
+    .cases-grid { grid-template-columns: 1fr; }
+    .case-card.wide { grid-column: span 1; }
+    .decision-item { grid-template-columns: 40px 1fr; }
+    .decision-badge { display: none; }
+    .sticky-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sticky Nav -->
+<nav class="sticky-nav">
+  <div class="nav-dot active" data-section="hero" data-label="封面"></div>
+  <div class="nav-dot" data-section="overview" data-label="总览"></div>
+  <div class="nav-dot" data-section="cognition" data-label="战略判断"></div>
+  <div class="nav-dot" data-section="trend" data-label="趋势机会"></div>
+  <div class="nav-dot" data-section="swot" data-label="SWOT"></div>
+  <div class="nav-dot" data-section="position" data-label="战略定位"></div>
+  <div class="nav-dot" data-section="sku" data-label="货盘策略"></div>
+  <div class="nav-dot" data-section="content" data-label="内容策略"></div>
+  <div class="nav-dot" data-section="platform" data-label="平台渠道"></div>
+  <div class="nav-dot" data-section="livestream" data-label="直播策略"></div>
+  <div class="nav-dot" data-section="compliance" data-label="合规策略"></div>
+  <div class="nav-dot" data-section="milestone" data-label="里程碑"></div>
+  <div class="nav-dot" data-section="benchmark" data-label="标杆案例"></div>
+  <div class="nav-dot" data-section="decisions" data-label="关键决策"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-content">
+    <div class="hero-label">华润三九 · 业务规划 · 框架初稿</div>
+    <h1 class="hero-title">
+      2026<span class="accent">·</span><br>
+      <span class="line2">兴趣电商规划</span>
+    </h1>
+    <p class="hero-sub">
+      用<strong>内容换自然流量</strong>、用<strong>合规建护城河</strong>、<br>
+      用<strong>AI 提效降本</strong>、把钱集中<strong>打爆款</strong>。
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <div class="meta-label">规划日期</div>
+        <div class="meta-value">2026.05.21</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">状态</div>
+        <div class="meta-value">框架初稿</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">适用平台</div>
+        <div class="meta-value">全域</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">关键决策</div>
+        <div class="meta-value">8 项</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll to explore</span>
+  </div>
+</section>
+
+<!-- FACT TICKER -->
+<div class="fact-strip">
+  <div class="fact-ticker">
+    <span>兴趣电商医药健康类破 500 亿</span><span class="sep">·</span>
+    <span>增速超 100%</span><span class="sep">·</span>
+    <span>药品搜索转化率 >40%</span><span class="sep">·</span>
+    <span>AIGC 投稿 +91%</span><span class="sep">·</span>
+    <span>智能投放 ROI +15–25%</span><span class="sep">·</span>
+    <span>千川技术服务费降至 0.6%</span><span class="sep">·</span>
+    <span>小红书驳回率 +19%</span><span class="sep">·</span>
+    <span>内容是子弹 · 算法是枪管</span><span class="sep">·</span>
+    <span>兴趣电商医药健康类破 500 亿</span><span class="sep">·</span>
+    <span>增速超 100%</span><span class="sep">·</span>
+    <span>药品搜索转化率 >40%</span><span class="sep">·</span>
+    <span>AIGC 投稿 +91%</span><span class="sep">·</span>
+    <span>智能投放 ROI +15–25%</span><span class="sep">·</span>
+    <span>千川技术服务费降至 0.6%</span><span class="sep">·</span>
+    <span>小红书驳回率 +19%</span><span class="sep">·</span>
+    <span>内容是子弹 · 算法是枪管</span><span class="sep">·</span>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">框架总览</div>
+      <h2 class="section-title">规划全景图</h2>
+      <p class="section-desc">四部分十五章节，先搭骨架和方法论，再逐部分填充细节、对齐数据、定目标。</p>
+    </div>
+
+    <div class="overview-grid reveal">
+      <div class="overview-card">
+        <div class="ov-part">Part 01</div>
+        <div class="ov-title">战略判断<br>为什么做、做成什么样</div>
+        <ul class="ov-items">
+          <li>一、认知对齐：兴趣电商到底是什么</li>
+          <li>二、行业趋势与机会窗口</li>
+          <li>三、自身现状盘点（SWOT）</li>
+          <li>四、战略定位与北极星目标</li>
+        </ul>
+      </div>
+      <div class="overview-card">
+        <div class="ov-part">Part 02</div>
+        <div class="ov-title">业务设计<br>做什么</div>
+        <ul class="ov-items">
+          <li>五、货盘策略：选品第一道分水岭</li>
+          <li>六、内容策略：核心引擎</li>
+          <li>七、平台与渠道策略</li>
+          <li>八、达人矩阵策略</li>
+          <li>九、直播策略</li>
+          <li>十、投放策略（千川）</li>
+          <li>十一、货架场承接</li>
+        </ul>
+      </div>
+      <div class="overview-card">
+        <div class="ov-part">Part 03</div>
+        <div class="ov-title">落地保障<br>怎么做</div>
+        <ul class="ov-items">
+          <li>十二、合规策略（重中之重）</li>
+          <li>十三、组织与团队（人+AI）</li>
+          <li>十四、数据与复盘体系</li>
+          <li>十五、节奏与里程碑</li>
+        </ul>
+      </div>
+      <div class="overview-card">
+        <div class="ov-part">Part 04</div>
+        <div class="ov-title">标杆案例<br>怎么学</div>
+        <ul class="ov-items">
+          <li>仁和药业 — 分销标杆</li>
+          <li>汤臣倍健 — 品牌自播</li>
+          <li>修正药业 — 下沉打法</li>
+          <li>同仁堂 — 内容化老字号</li>
+          <li>白牌/新消费 — 投放飞轮</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COGNITION -->
+<section class="section" id="cognition">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 01 · 战略判断</div>
+      <h2 class="section-title">认知对齐：兴趣电商到底是什么</h2>
+      <p class="section-desc">避免把"兴趣电商"简单等同于"在抖音开个店"——统一认知是规划的起点。</p>
+    </div>
+
+    <div class="compare-grid reveal">
+      <div class="compare-col left">
+        <div class="compare-head">传统货架电商</div>
+        <div class="compare-title">天猫 / 京东</div>
+        <div class="compare-row"><span class="cr-label">流量逻辑</span><span class="cr-val">人找货（用户主动搜索）</span></div>
+        <div class="compare-row"><span class="cr-label">成交起点</span><span class="cr-val">有明确购买意图</span></div>
+        <div class="compare-row"><span class="cr-label">核心资产</span><span class="cr-val">店铺权重、搜索排名</span></div>
+        <div class="compare-row"><span class="cr-label">增长引擎</span><span class="cr-val">流量采买 + 运营</span></div>
+        <div class="compare-row"><span class="cr-label">决策链路</span><span class="cr-val">短（搜 → 比 → 买）</span></div>
+      </div>
+      <div class="compare-divider">VS</div>
+      <div class="compare-col right">
+        <div class="compare-head">兴趣电商</div>
+        <div class="compare-title">抖音 / 快手</div>
+        <div class="compare-row"><span class="cr-label">流量逻辑</span><span class="cr-val">货找人（算法推荐激发需求）</span></div>
+        <div class="compare-row"><span class="cr-label">成交起点</span><span class="cr-val">内容种草激发潜在需求</span></div>
+        <div class="compare-row"><span class="cr-label">核心资产</span><span class="cr-val">内容、达人、账号</span></div>
+        <div class="compare-row"><span class="cr-label">增长引擎</span><span class="cr-val"><strong>优质内容 + 算法推荐</strong></span></div>
+        <div class="compare-row"><span class="cr-label">决策链路</span><span class="cr-val">长（看 → 种草 → 搜 → 买，常跨平台）</span></div>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <p><strong>核心判断：</strong>兴趣电商的本质是"<strong>内容驱动的生意</strong>"。内容是子弹，算法是枪管，没有好内容，投流、达人、直播都是空转。</p>
+    </div>
+
+    <div class="northstar reveal">
+      <div class="ns-label">抖音电商官方方法论</div>
+      <div class="ns-statement">全域兴趣电商 · FACT 经营矩阵 · 5A 人群资产</div>
+      <div class="ns-metrics">
+        <div class="ns-metric">
+          <div class="ns-metric-label">全域兴趣电商</div>
+          <div class="ns-metric-val">内容场 + 货架场</div>
+          <div class="ns-metric-sub">直播 + 短视频 + 搜索 + 商城 + 店铺</div>
+        </div>
+        <div class="ns-metric">
+          <div class="ns-metric-label">FACT 经营矩阵</div>
+          <div class="ns-metric-val">四条腿走路</div>
+          <div class="ns-metric-sub">Field · Alliance · Campaign · Top-KOL</div>
+        </div>
+        <div class="ns-metric">
+          <div class="ns-metric-label">5A 人群资产</div>
+          <div class="ns-metric-val">O-5A 全链路</div>
+          <div class="ns-metric-sub">了解→吸引→问询→行动→拥护</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TREND -->
+<section class="section" id="trend">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 01 · 战略判断</div>
+      <h2 class="section-title">行业趋势与机会窗口</h2>
+      <p class="section-desc">机会窗口期正在开启，但窗口不会一直开着——现在是进场的最佳时机。</p>
+    </div>
+
+    <div class="trend-grid reveal">
+      <div class="trend-card">
+        <span class="trend-icon">📈</span>
+        <div class="trend-name">大盘高速增长</div>
+        <div class="trend-data">医药健康类破 500 亿 · 增速 >100%</div>
+        <div class="trend-desc">兴趣电商医药健康类仍处于高速增长阶段。</div>
+        <div class="trend-impact">增量市场，不进场就是丢份额</div>
+      </div>
+      <div class="trend-card">
+        <span class="trend-icon">💊</span>
+        <div class="trend-name">OTC 渠道迁移</div>
+        <div class="trend-data">处方药电商首次超院内 · 搜索转化 >40%</div>
+        <div class="trend-desc">线上正在成为主战场，兴趣电商是新增量入口。</div>
+        <div class="trend-impact">兴趣电商是新增量，非可选项</div>
+      </div>
+      <div class="trend-card">
+        <span class="trend-icon">⚡</span>
+        <div class="trend-name">千川重构</div>
+        <div class="trend-data">乘方三流合一 · 技术服务费 0.6%</div>
+        <div class="trend-desc">净成交 ROI 考核，智能投放效率大幅提升。</div>
+        <div class="trend-impact">投放效率红利期，早进早占位</div>
+      </div>
+      <div class="trend-card">
+        <span class="trend-icon">🤖</span>
+        <div class="trend-name">AI 渗透全链路</div>
+        <div class="trend-data">AIGC 投稿 +91% · 智能投放 ROI +15–25%</div>
+        <div class="trend-desc">AI 正在改写内容生产和投放优化的效率曲线。</div>
+        <div class="trend-impact">用 AI 提效是必选项，不是加分项</div>
+      </div>
+      <div class="trend-card">
+        <span class="trend-icon">🛡</span>
+        <div class="trend-name">合规收紧</div>
+        <div class="trend-data">医生科普带货严管 · 小红书驳回 +19%</div>
+        <div class="trend-desc">三品一械禁推，违规代价骤增，合规洗牌加速。</div>
+        <div class="trend-impact">合规者得红利，是护城河不是枷锁</div>
+      </div>
+      <div class="trend-card">
+        <span class="trend-icon">🔍</span>
+        <div class="trend-name">GEO 新战场</div>
+        <div class="trend-data">AI 搜索流量提升 · 内容结构化成核心</div>
+        <div class="trend-desc">AI 搜索流量崛起，内容同时为 GEO 优化供料。</div>
+        <div class="trend-impact">兴趣电商内容可同步强化 GEO 布局</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SWOT -->
+<section class="section" id="swot">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 01 · 战略判断</div>
+      <h2 class="section-title">自身现状盘点</h2>
+      <p class="section-desc">客观评估内外部条件，找到真正的战略着力点。</p>
+    </div>
+
+    <div class="swot-grid reveal">
+      <div class="swot-cell s">
+        <div class="swot-label">S</div>
+        <div class="swot-head">优势 Strengths</div>
+        <ul class="swot-items">
+          <li>品牌信任度高（999 等认知 95%+）</li>
+          <li>产品矩阵全，货盘丰富</li>
+          <li>有电商运营和后链路承接能力</li>
+          <li>数字化团队，AI 应用基础良好</li>
+        </ul>
+      </div>
+      <div class="swot-cell w">
+        <div class="swot-label">W</div>
+        <div class="swot-head">劣势 Weaknesses</div>
+        <ul class="swot-items">
+          <li>内容生产能力以外采为主</li>
+          <li>自有爆款方法论未沉淀</li>
+          <li>兴趣电商专项团队/经验不足</li>
+          <li>合规约束下内容空间窄</li>
+        </ul>
+      </div>
+      <div class="swot-cell o">
+        <div class="swot-label">O</div>
+        <div class="swot-head">机会 Opportunities</div>
+        <ul class="swot-items">
+          <li>大盘高速增长，增量市场充足</li>
+          <li>投放红利期，早进早占位</li>
+          <li>合规洗牌期，专业品牌得利</li>
+          <li>AI 大幅降本，内容效率红利</li>
+        </ul>
+      </div>
+      <div class="swot-cell t">
+        <div class="swot-label">T</div>
+        <div class="swot-head">威胁 Threats</div>
+        <ul class="swot-items">
+          <li>白牌/竞品抢位凶猛</li>
+          <li>投流费比高，烧钱风险大</li>
+          <li>合规红线趋严，违规代价高</li>
+          <li>项目周期短，容错空间小</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POSITION -->
+<section class="section" id="position">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 01 · 战略判断</div>
+      <h2 class="section-title">战略定位与北极星目标</h2>
+      <p class="section-desc">三个备选定位，结合实际选择或组合——北极星目标追"健康的 GMV"，而非绝对规模。</p>
+    </div>
+
+    <div class="strategy-cards reveal">
+      <div class="strategy-card recommended">
+        <div class="rec-badge">推荐组合</div>
+        <div class="strategy-opt">A</div>
+        <div class="strategy-name">内容驱动的增量场</div>
+        <div class="strategy-desc">兴趣电商作为传统电商之外的新增量，重内容轻投流，追求可持续增长。</div>
+        <div class="strategy-fit">适合：预算紧 · 要可持续</div>
+      </div>
+      <div class="strategy-card recommended">
+        <div class="strategy-opt">B</div>
+        <div class="strategy-name">爆款孵化主阵地</div>
+        <div class="strategy-desc">把兴趣电商作为新品/机会品 0→1 打爆的试验田，跑通可复制方法论。</div>
+        <div class="strategy-fit">适合：要打标杆案例</div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-opt">C</div>
+        <div class="strategy-name">全域协同的种草前端</div>
+        <div class="strategy-desc">抖音种草 → 全域搜索承接，做品牌认知前置，重视长期品牌资产。</div>
+        <div class="strategy-fit">适合：重品牌 · 长期主义</div>
+      </div>
+    </div>
+
+    <div class="northstar reveal">
+      <div class="ns-label">北极星目标（示例结构·数字待定）</div>
+      <div class="ns-statement">健康 ROI 下的 GMV 规模 × 自然流量占比提升</div>
+      <div class="ns-metrics">
+        <div class="ns-metric">
+          <div class="ns-metric-label">年度 GMV</div>
+          <div class="ns-metric-val">待定</div>
+          <div class="ns-metric-sub">基线补齐后设定</div>
+        </div>
+        <div class="ns-metric">
+          <div class="ns-metric-label">自然流量占比</div>
+          <div class="ns-metric-val">_% → _%</div>
+          <div class="ns-metric-sub">减少对付费流量依赖</div>
+        </div>
+        <div class="ns-metric">
+          <div class="ns-metric-label">综合费比</div>
+          <div class="ns-metric-val">≤ __%</div>
+          <div class="ns-metric-sub">健康可持续的核心指标</div>
+        </div>
+        <div class="ns-metric">
+          <div class="ns-metric-label">爆款案例</div>
+          <div class="ns-metric-val">1–2 个</div>
+          <div class="ns-metric-sub">可复制方法论沉淀</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKU -->
+<section class="section" id="sku">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 02 · 业务设计</div>
+      <h2 class="section-title">货盘策略：选品是第一道分水岭</h2>
+      <p class="section-desc">兴趣电商 80% 的成败在选品。选错品，再好的内容和投放都救不回来。</p>
+    </div>
+
+    <div class="quadrant-wrap reveal">
+      <div style="position: relative; padding: 30px 100px 30px 30px;">
+        <div class="quadrant-chart">
+          <div class="q-label-top">高内容空间</div>
+          <div class="q-label-right">高转化效率</div>
+          <div class="q-axis-x"></div>
+          <div class="q-axis-y"></div>
+          <div class="q-cell tl">
+            <div class="q-cell-name">品牌种草品</div>
+            <div class="q-cell-sub">讲故事<br>做认知</div>
+          </div>
+          <div class="q-cell tr">
+            <div class="q-cell-name">爆款潜力品</div>
+            <div class="q-cell-sub">重点投入</div>
+            <div class="q-star">★★★★★</div>
+          </div>
+          <div class="q-cell bl">
+            <div class="q-cell-name">谨慎/放弃</div>
+            <div class="q-cell-sub">两端均弱</div>
+          </div>
+          <div class="q-cell br">
+            <div class="q-cell-name">分销走量品</div>
+            <div class="q-cell-sub">达人分销</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quadrant-sku-list">
+        <div class="sku-item">
+          <div class="sku-stars">⭐⭐⭐⭐⭐</div>
+          <div class="sku-info">
+            <div class="sku-name">大健康 / 非药品</div>
+            <div class="sku-desc">洗发水、身体乳、健字号、械字号合规品</div>
+          </div>
+          <div class="sku-badge priority">优先主攻</div>
+        </div>
+        <div class="sku-item">
+          <div class="sku-stars">⭐⭐⭐</div>
+          <div class="sku-info">
+            <div class="sku-name">独家通用名 OTC</div>
+            <div class="sku-desc">可做，需想清楚定位和合规边界</div>
+          </div>
+          <div class="sku-badge normal">谨慎推进</div>
+        </div>
+        <div class="sku-item">
+          <div class="sku-stars">⭐⭐</div>
+          <div class="sku-info">
+            <div class="sku-name">普通 OTC 药品</div>
+            <div class="sku-desc">合规空间窄，以科普认知为主</div>
+          </div>
+          <div class="sku-badge caution">科普为主</div>
+        </div>
+        <div class="sku-item">
+          <div class="sku-stars">⭐</div>
+          <div class="sku-info">
+            <div class="sku-name">处方药</div>
+            <div class="sku-desc">强合规约束，基本不做内容带货</div>
+          </div>
+          <div class="sku-badge avoid">规避</div>
+        </div>
+
+        <div class="insight" style="margin: 16px 0 0;">
+          <p><strong>核心策略：非药先行、药品做认知。</strong>用大健康/非药品类在兴趣电商打开局面、沉淀能力，药品以合规科普建立信任、引导搜索承接。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<section class="section" id="content">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 02 · 业务设计</div>
+      <h2 class="section-title">内容策略：兴趣电商的核心引擎</h2>
+      <p class="section-desc">三轨并行 + AI 内容工厂——用自产内容的自然流量替代部分付费流量。</p>
+    </div>
+
+    <div class="tracks-grid reveal">
+      <div class="track-card">
+        <div class="track-num">01</div>
+        <div class="track-icon red">🌱</div>
+        <div class="track-type">种草内容</div>
+        <div class="track-name">激发需求<br>蓄水 5A 人群</div>
+        <div class="track-goal">短视频/图文，触达 A1-A3 潜在人群，做认知前置和心智占位。</div>
+        <div class="track-method">AIGC 批量生产 + 真人核心把控</div>
+      </div>
+      <div class="track-card">
+        <div class="track-num">02</div>
+        <div class="track-icon blue">💰</div>
+        <div class="track-type">转化内容</div>
+        <div class="track-name">收割成交<br>直播/带货短视频</div>
+        <div class="track-goal">在已蓄水人群中收割 A4-A5 转化，直接驱动 GMV 增长。</div>
+        <div class="track-method">自播 + 达人合作</div>
+      </div>
+      <div class="track-card">
+        <div class="track-num">03</div>
+        <div class="track-icon teal">🏥</div>
+        <div class="track-type">信任内容</div>
+        <div class="track-name">品牌信任<br>合规专业背书</div>
+        <div class="track-goal">专业科普/医生内容，建立品牌信任度，是 OTC 企业的特殊护城河。</div>
+        <div class="track-method">真人专业把控，合规前置审核</div>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <p><strong>AI 内容工厂（降本核心）：</strong>策略输入 → 批量生产 → 智能分发 → 数据复盘。用 AIGC 把内容生产从"手工作坊"变"工业化流水线"，这是对抗"投流费比高"的核心武器。</p>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="section" id="platform">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 02 · 业务设计</div>
+      <h2 class="section-title">平台与渠道策略</h2>
+      <p class="section-desc">抖音是引擎，其他是放大器——一次生产、多平台分发。</p>
+    </div>
+
+    <div class="platform-list reveal">
+      <div class="platform-row header">
+        <span></span>
+        <span>平台</span>
+        <span>定位</span>
+        <span>打法</span>
+        <span>优先级</span>
+      </div>
+      <div class="platform-row">
+        <div class="pl-icon">🎵</div>
+        <div class="pl-name">抖音</div>
+        <div class="pl-position">主战场</div>
+        <div class="pl-tactic">自播 + 达人 + 千川，内容场货架场全打通</div>
+        <div class="pl-stars">★★★★★</div>
+      </div>
+      <div class="platform-row">
+        <div class="pl-icon">✌️</div>
+        <div class="pl-name">快手</div>
+        <div class="pl-position">下沉补充</div>
+        <div class="pl-tactic">复用抖音素材，老铁信任带货，覆盖下沉市场</div>
+        <div class="pl-stars">★★★</div>
+      </div>
+      <div class="platform-row">
+        <div class="pl-icon">💬</div>
+        <div class="pl-name">视频号</div>
+        <div class="pl-position">社交裂变</div>
+        <div class="pl-tactic">公众号 + 社群联动，私域反哺，社交裂变放大</div>
+        <div class="pl-stars">★★</div>
+      </div>
+      <div class="platform-row">
+        <div class="pl-icon">📕</div>
+        <div class="pl-name">小红书</div>
+        <div class="pl-position">种草 + KOS</div>
+        <div class="pl-tactic">搜索占位 + KOS 员工矩阵（OTC 合规通路）</div>
+        <div class="pl-stars">★★★</div>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <p><strong>核心逻辑：</strong>抖音打爆款 → 小红书做搜索占位 → 视频号社交裂变 → 快手下沉覆盖。<strong>内容场拉新，货架场收割。</strong>种草做得轰轰烈烈，货架场没承接，流量白白流失。</p>
+    </div>
+  </div>
+</section>
+
+<!-- LIVESTREAM -->
+<section class="section" id="livestream">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 02 · 业务设计</div>
+      <h2 class="section-title">直播策略</h2>
+      <p class="section-desc">黄金时段真人保体验，非高峰 AI 数字人补时长。</p>
+    </div>
+
+    <div class="live-grid reveal">
+      <div class="live-card">
+        <div class="live-type">Type 01</div>
+        <div class="live-name">品牌直播间</div>
+        <div class="live-detail">
+          <div class="live-row"><span class="live-key">定位</span><span class="live-val">形象 + 心智建设</span></div>
+          <div class="live-row"><span class="live-key">时段</span><span class="live-val">黄金时段</span></div>
+          <div class="live-row"><span class="live-key">主播</span><span class="live-val">真人 + 嘉宾</span></div>
+          <div class="live-row"><span class="live-key">核心</span><span class="live-val">保调性、展示品牌专业度</span></div>
+        </div>
+        <div class="live-bar"></div>
+      </div>
+      <div class="live-card">
+        <div class="live-type">Type 02</div>
+        <div class="live-name">效果转化间</div>
+        <div class="live-detail">
+          <div class="live-row"><span class="live-key">定位</span><span class="live-val">讲解 + 转化成交</span></div>
+          <div class="live-row"><span class="live-key">时段</span><span class="live-val">日常时段</span></div>
+          <div class="live-row"><span class="live-key">主播</span><span class="live-val">真人 + AI 数字人</span></div>
+          <div class="live-row"><span class="live-key">核心</span><span class="live-val">GPM 驱动，智能脚本提效</span></div>
+        </div>
+        <div class="live-bar"></div>
+      </div>
+      <div class="live-card">
+        <div class="live-type">Type 03</div>
+        <div class="live-name">AI 数字人间</div>
+        <div class="live-detail">
+          <div class="live-row"><span class="live-key">定位</span><span class="live-val">长尾低成本覆盖</span></div>
+          <div class="live-row"><span class="live-key">时段</span><span class="live-val">非高峰全时段</span></div>
+          <div class="live-row"><span class="live-key">主播</span><span class="live-val">AI 数字人全托管</span></div>
+          <div class="live-row"><span class="live-key">核心</span><span class="live-val">零人力成本，补流量时段</span></div>
+        </div>
+        <div class="live-bar"></div>
+      </div>
+    </div>
+
+    <div class="insight reveal">
+      <p><strong>投放逻辑：</strong>优质内容 → 自然流量验证 → 付费追投放大 → 数据复盘迭代。缩减纯投流比例，只对已验证的好内容付费放大。<strong>千川·乘方</strong>三流合一，技术服务费 0.6% 红利期。</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section class="section" id="compliance">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 03 · 落地保障</div>
+      <h2 class="section-title">合规策略：重中之重</h2>
+      <p class="section-desc">对 OTC 企业，合规不是束缚而是护城河。在合规洗牌期，专业合规的品牌反而得红利。</p>
+    </div>
+
+    <div class="compliance-grid reveal">
+      <div class="comp-col yes">
+        <div class="comp-head">✓ 可以做</div>
+        <ul class="comp-items">
+          <li>讲成分/对症状机理，科普预防治疗知识</li>
+          <li>医生做纯科普内容（不推荐品牌）</li>
+          <li>非药品类正常功效宣传</li>
+          <li>合规械字号/健字号产品正常带货</li>
+          <li>KOS 员工矩阵（小红书合规通路）</li>
+        </ul>
+      </div>
+      <div class="comp-col no">
+        <div class="comp-head">✕ 不能做</div>
+        <ul class="comp-items">
+          <li>直接推荐具体品牌、承诺疗效</li>
+          <li>替代诊断或提供诊断性建议</li>
+          <li>白大褂形式推荐品牌</li>
+          <li>普通产品宣传医疗功效</li>
+          <li>三品一械违规投放推广</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;" class="reveal">
+      <div class="section-tag" style="margin-bottom: 24px;">审核三关卡</div>
+      <div class="audit-flow">
+        <div class="audit-step">
+          <div class="audit-num">01</div>
+          <div class="audit-name">AI 预审</div>
+          <div class="audit-desc">秒级拦截违规词</div>
+        </div>
+        <div class="audit-step">
+          <div class="audit-num">02</div>
+          <div class="audit-name">人工复审</div>
+          <div class="audit-desc">调性 + 风险把关</div>
+        </div>
+        <div class="audit-step">
+          <div class="audit-num">03</div>
+          <div class="audit-name">发布监控</div>
+          <div class="audit-desc">舆情 + 巡检追踪</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MILESTONE -->
+<section class="section" id="milestone">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 03 · 落地保障</div>
+      <h2 class="section-title">节奏与里程碑</h2>
+      <p class="section-desc">先建能力（不烧钱）→ 再上规模（验证后放大）→ 最后沉方法（可复制）。</p>
+    </div>
+
+    <div class="milestone-grid reveal">
+      <div class="ms-card">
+        <div class="ms-phase">Phase 01</div>
+        <div class="ms-title">建设期</div>
+        <div class="ms-focus">选品定盘、自播跑通、AI 内容工厂试跑、合规体系搭建——先把基础设施建好，不烧推广费。</div>
+        <div class="ms-kpi-label">交付物 / KPI</div>
+        <div class="ms-kpi">自播稳定开播<br>内容工作流跑通<br>合规审核链路建立</div>
+        <div class="ms-progress"></div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-phase">Phase 02</div>
+        <div class="ms-title">上量期</div>
+        <div class="ms-focus">达人矩阵铺开、爆款内容批量测试、投放放大——有了验证的基础后才加大预算投入。</div>
+        <div class="ms-kpi-label">交付物 / KPI</div>
+        <div class="ms-kpi">1–2 个产品起量<br>自然流量占比提升<br>达人合作体系跑通</div>
+        <div class="ms-progress"></div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-phase">Phase 03</div>
+        <div class="ms-title">沉淀期</div>
+        <div class="ms-focus">爆款方法论沉淀、数据钩稽体系上线、全域承接打通——把跑出来的方法变成可复制的标准。</div>
+        <div class="ms-kpi-label">交付物 / KPI</div>
+        <div class="ms-kpi">可复制方法论文档<br>年度复盘报告<br>全域承接体系打通</div>
+        <div class="ms-progress"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENCHMARK -->
+<section class="section" id="benchmark">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Part 04 · 标杆案例</div>
+      <h2 class="section-title">标杆案例参考</h2>
+      <p class="section-desc">品类决定打法——三套打法并行，按品类匹配，不简单复制。</p>
+    </div>
+
+    <div class="cases-grid reveal">
+      <div class="case-card">
+        <div class="case-brand">仁和药业</div>
+        <div class="case-tag">OTC 分销标杆</div>
+        <div class="case-tactic">海量达人分销 + 性价比货盘 + 自播矩阵，主打大健康/械字号/健字号品类（妇炎洁、闪释等延展品）。</div>
+        <div class="case-learn-label">可借鉴</div>
+        <div class="case-learn">用非药/大健康品类在抖音放量，避开药品合规约束；达人分销快速起量的打法。</div>
+      </div>
+      <div class="case-card">
+        <div class="case-brand">汤臣倍健</div>
+        <div class="case-tag">品牌自播标杆</div>
+        <div class="case-tactic">以品牌自播为主轴，内容种草 + 专业背书，重视用户资产和复购率，兼顾规模与调性。</div>
+        <div class="case-learn-label">可借鉴</div>
+        <div class="case-learn">品牌型企业如何"既要规模又要调性"，自播为核心阵地的路径与我们高度匹配。</div>
+      </div>
+      <div class="case-card">
+        <div class="case-brand">修正药业</div>
+        <div class="case-tag">达人分销 + 下沉</div>
+        <div class="case-tactic">达人分销走量，覆盖下沉市场，多 SKU 矩阵协同，组织化规模运营能力强。</div>
+        <div class="case-learn-label">可借鉴</div>
+        <div class="case-learn">多品类协同、达人分销规模化的组织能力建设模式。</div>
+      </div>
+      <div class="case-card">
+        <div class="case-brand">同仁堂</div>
+        <div class="case-tag">老字号内容化</div>
+        <div class="case-tactic">用老字号品牌势能做内容，年轻化表达，子品牌（知嘛健康等）承接新场景需求。</div>
+        <div class="case-learn-label">可借鉴</div>
+        <div class="case-learn">"999"国民品牌势能如何在兴趣电商实现内容化、年轻化突破。</div>
+      </div>
+      <div class="case-card wide">
+        <div class="case-brand">白牌/新消费（诺特兰德 · 参半 · Swisse）</div>
+        <div class="case-tag">内容 + 投放飞轮</div>
+        <div class="case-tactic">极致内容测试 + 千川投放飞轮，AIGC 批量内容，数据驱动迭代——无品牌包袱、无合规约束，跑得极快。</div>
+        <div class="case-learn-label">可借鉴（同时要警惕）</div>
+        <div class="case-learn">内容工业化生产 + 投放放大飞轮模型，正是我们 AI 内容工厂要学的。但白牌无合规约束，我们要扬长（品牌+合规）避短，不能简单复制低价打法。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DECISIONS -->
+<section class="section" id="decisions">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">关键决策汇总</div>
+      <h2 class="section-title">需要一起拍板的 8 个关键决策</h2>
+      <p class="section-desc">框架已搭好，这些是推进前必须对齐的核心问题。</p>
+    </div>
+
+    <div class="decisions-list reveal">
+      <div class="decision-item">
+        <div class="decision-num">01</div>
+        <div class="decision-text"><strong>范围界定：</strong>只做抖音，还是抖音 + 快手 + 视频号全含？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">02</div>
+        <div class="decision-text"><strong>数据基线：</strong>现有抖音/快手 GMV、自播情况、达人合作量、投流费比、主要在卖 SKU——没有基线就没法定增长目标。</div>
+        <div class="decision-badge">最优先</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">03</div>
+        <div class="decision-text"><strong>战略定位：</strong>A 增量场 / B 爆款孵化 / C 种草前端，还是 A+B 组合？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">04</div>
+        <div class="decision-text"><strong>先锋品清单：</strong>哪些 SKU 作为兴趣电商的先锋品和爆款孵化品？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">05</div>
+        <div class="decision-text"><strong>内容策略：</strong>自制 vs 外采比例怎么定？AI 内容工厂搭建优先级？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">06</div>
+        <div class="decision-text"><strong>达人策略：</strong>继续走代理，还是开始自建达人库？AI 达人匹配工具的引入节奏？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">07</div>
+        <div class="decision-text"><strong>预算盘子：</strong>投放预算、费比红线、内容资产投入 vs 投流的预算切分？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+      <div class="decision-item">
+        <div class="decision-num">08</div>
+        <div class="decision-text"><strong>组织形态：</strong>兴趣电商是独立小组，还是嵌入现有推广组？需要新增/调配哪些人？</div>
+        <div class="decision-badge">待讨论</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">2026</div>
+      <div class="footer-meta">
+        <div class="footer-label">文档状态</div>
+        <div class="footer-status">框架初稿 · 2026-05-21 · 待讨论</div>
+        <div style="margin-top: 12px; font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em;">
+          华润三九 · 兴趣电商业务规划
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  reveals.forEach(el => revealObs.observe(el));
+
+  // Nav dots
+  const sections = document.querySelectorAll('[id]');
+  const dots = document.querySelectorAll('.nav-dot');
+
+  const navObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        dots.forEach(d => {
+          d.classList.toggle('active', d.dataset.section === id);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(s => navObs.observe(s));
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.section);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
